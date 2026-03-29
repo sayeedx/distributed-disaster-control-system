@@ -1,0 +1,53 @@
+version: '3.9'
+
+services:
+  postgres:
+    image: postgres:16
+    container_name: ddcs-postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: disaster_db
+      POSTGRES_USER: disaster_user
+      POSTGRES_PASSWORD: disaster_pass
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+ 
+  allocation-service:
+    build:
+      context: ./services/allocation_service
+      dockerfile: Dockerfile
+    container_name: ddcs-allocation-service
+    depends_on:
+      - postgres
+      - rabbitmq
+    restart: always
+    
+  rabbitmq:
+    image: rabbitmq:3-management
+    container_name: ddcs-rabbitmq
+    restart: unless-stopped
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+
+  api-gateway:
+    build:
+      context: ./services/api_gateway
+    container_name: ddcs-api-gateway
+    restart: unless-stopped
+    depends_on:
+      - postgres
+      - rabbitmq
+    environment:
+      DATABASE_URL: postgresql+psycopg2://disaster_user:disaster_pass@postgres:5432/disaster_db
+      RABBITMQ_URL: amqp://guest:guest@rabbitmq:5672/
+      PYTHONPATH: /app
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./services:/app/services
+
+volumes:
+  postgres_data:

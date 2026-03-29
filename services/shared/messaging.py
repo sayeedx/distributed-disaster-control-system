@@ -24,3 +24,8 @@ class RabbitPublisher:
             properties=pika.BasicProperties(delivery_mode=2),
         )
         connection.close()
+
+
+def publish_message(queue_name: str, payload: dict[str, Any]) -> None:
+    publisher = RabbitPublisher()
+    publisher.publish(queue_name, payload)

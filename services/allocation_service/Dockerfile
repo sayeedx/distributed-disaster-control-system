@@ -1,10 +1,11 @@
-FROM python:3.11-slim
+FROM python:3.10-slim
 
 WORKDIR /app
 
-COPY requirements.txt /app/requirements.txt
-RUN pip install --no-cache-dir -r /app/requirements.txt
+# Copy ONLY what we need (clean + guaranteed)
+COPY services/allocation_service /app/services/allocation_service
+COPY services/shared /app/services/shared
 
-COPY ../ /app/services
+RUN pip install --no-cache-dir -r /app/services/allocation_service/requirements.txt
 
 CMD ["python", "/app/services/allocation_service/app/main.py"]

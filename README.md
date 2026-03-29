@@ -81,7 +81,7 @@ The system is built using a microservices architecture and includes:
 ### Run the Project
 
 ```bash
-git clone <your-repo-url>
+git clone https://github.com/sayeedx/distributed-disaster-control-system
 cd distributed-disaster-control-system
 docker compose up --build
 

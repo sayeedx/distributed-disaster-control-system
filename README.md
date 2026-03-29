@@ -50,7 +50,7 @@ The system is built using a microservices architecture and includes:
 
 ### 2. List Events
 
-<img src="screenshots/listevents.png" width="700"/>
+<img src="screenshots/listevent.png" width="700"/>
 
 ---
 
